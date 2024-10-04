@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+    environment {
+      name= 'pooja'
+    }
+     parameters {
+      string (name: 'person' , defaultValue: 'default' , description: 'choices') 
+      choice(name:'city' , choices: ['delhi', 'pune', 'gurugam'], description: '')
+         
+     }
+    
+
+    stages {
+        stage('Hello') {
+            
+            environment {
+                uname= 'saurav'
+                 }
+            steps {
+                echo 'Hello World'
+                sh 'echo "$uname"'
+                
+            }
+        }
+        
+        stage('Run a command') {
+            steps {
+                sh '''
+                ls
+                date
+                pwd
+                ls
+                '''
+            }
+        }
+        stage('Environment Variable') {
+            steps {
+               sh 'echo "$BUILD_ID"'
+               sh 'echo $name'
+            }
+        }
+         stage('Parameters Variable') {
+             
+            steps {
+               sh 'echo "Hello World"'
+               sh 'echo "$person"'
+               
+            }
+        }
+        
+        stage('should we continue') {
+             input{
+                 message "should we continue?"
+                 ok 'yes we can'
+             }
+            steps {
+               sh 'echo "Hello World"'
+               
+            }
+        }
+        
+    }
+    post{
+            always {
+                echo "I will always say Hello"
+            }
+            failure {
+                echo "oops!!! failed"
+            }
+            success {
+                echo "SUCCESS"
+            }
+        }
+}
